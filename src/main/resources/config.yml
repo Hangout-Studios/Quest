@@ -1,0 +1,36 @@
+Options:
+  Max_Active_Quests: 10
+Quests:
+  Test_Quest:
+    Display_Name: 'Test quest'
+    Description:
+    - 'This be a test quest'
+    - 'not to be confused with'
+    - 'a real quest!'
+    Icon_Material: DIRT
+    Objectives:
+      destroy_dirt:
+        Display_Name: 'Digging dirt'
+        Type: 'BLOCK_DESTROY'
+        Goal:
+          Type: 'DIRT'
+          Amount: 10
+      kill_zombies:
+        Display_Name: 'Killing zombies'
+        Type: 'KILL_MOB'
+        Goal:
+          Type: 'ZOMBIE'
+          Amount: 10
+    Requirements:
+      RPG:
+        Minimal_Level: 0
+        Races:
+        - '-none-'
+        Occupations:
+        - '-none-'
+      Completed_Quests:
+      - '-none-'
+    Rewards:
+      RPG:
+        Experience: 10
+        Occupation: '-none-'
