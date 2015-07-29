@@ -1,4 +1,0 @@
-name: Quest
-main: com.hangout.quests.Plugin
-version: 1.0
-depend: [CorePlugin]
