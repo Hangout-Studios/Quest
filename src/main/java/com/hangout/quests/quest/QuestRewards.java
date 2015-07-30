@@ -1,7 +1,7 @@
 package com.hangout.quests.quest;
 
-import com.hangout.core.HangoutAPI;
 import com.hangout.core.player.CommonPlayerBundle;
+import com.hangout.core.player.CommonPlayerManager;
 import com.hangout.quests.player.QuestPlayer;
 
 public class QuestRewards {
@@ -14,7 +14,7 @@ public class QuestRewards {
 	}
 	
 	public void reward(QuestPlayer p){
-		CommonPlayerBundle bundle = HangoutAPI.getPlayerBundle(p.getHangoutPlayer().getUUID());
+		CommonPlayerBundle bundle = CommonPlayerManager.getPlayer(p.getHangoutPlayer().getUUID());
 		if(!occupation.equals("-none-")){
 			bundle.unlockRPGOccupation(occupation);
 		}

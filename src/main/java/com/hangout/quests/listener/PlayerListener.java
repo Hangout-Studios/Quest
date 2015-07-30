@@ -9,15 +9,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.hangout.core.Config;
-import com.hangout.core.HangoutAPI;
 import com.hangout.core.events.PlayerJoinCompleteEvent;
 import com.hangout.core.events.PlayerPostLoadEvent;
 import com.hangout.core.events.PlayerQuitCompleteEvent;
+import com.hangout.core.player.CommonPlayerManager;
+import com.hangout.core.utils.database.Database;
+import com.hangout.core.utils.mc.DebugUtils;
 import com.hangout.quests.Plugin;
 import com.hangout.quests.player.QuestPlayer;
 import com.hangout.quests.player.QuestPlayerManager;
 import com.hangout.quests.quest.Quest;
 import com.hangout.quests.quest.QuestManager;
+import com.hangout.quests.quest.QuestObjective;
 
 public class PlayerListener implements Listener {
 	
@@ -41,13 +44,13 @@ public class PlayerListener implements Listener {
 				
 				QuestPlayer p = new QuestPlayer(e.getPlayer());
 				QuestPlayerManager.addPlayer(p);
-				HangoutAPI.addCommonPlayer(e.getPlayer().getUUID(), "Quest", p);
+				CommonPlayerManager.addPlayer(e.getPlayer().getUUID(), "Quest", p);
 				
 				loadQuests(p);
 				
 				e.getPlayer().setLoadingState("quest", true);
 				
-				HangoutAPI.sendDebugMessage("Loaded Quest player: " + e.getPlayer().getName());
+				DebugUtils.sendDebugMessage("Loaded Quest player: " + e.getPlayer().getName());
 			}
 			
 		});
@@ -57,52 +60,36 @@ public class PlayerListener implements Listener {
 		for(Quest q : QuestManager.getQuests()){
 			String tag = q.getTag();
 			
-			try (PreparedStatement pst = HangoutAPI.getDatabase().prepareStatement(
+			try (PreparedStatement pst = Database.getConnection().prepareStatement(
 	                "SELECT action, objective_id FROM " + Config.databaseName + ".quest_action WHERE player_id = ? AND quest_id = ? "
 	                		+ "ORDER BY action_id DESC;")) {
 				pst.setString(1, p.getHangoutPlayer().getUUID().toString());
 				pst.setString(2, tag);
 				ResultSet rs = pst.executeQuery();
 				
-				if(!rs.first()){
-					pst.close();
-					continue;
-				}else{
+				boolean searchForComplete = false;
+				while(rs.next()){
 					String action = rs.getString("action");
 					String objective = rs.getString("objective_id");
 					
-					boolean countProgress = false;
-					if(action.equals("INCREMENT") || action.equals("OBJECTIVE_COMPLETE")){
-						p.addActiveQuest(q);
-						countProgress = true;
-					}else if(action.equals("ADD")){
-						p.addActiveQuest(q);
-					}else if(action.equals("COMPLETE")){
-						p.addCompletedQuest(q);
-						pst.close();
-						continue;
-					}
+					QuestObjective o = q.getObjective(objective);
 					
-					if(countProgress){
-						while(rs.next()){
-							action = rs.getString("action");
-							objective = rs.getString("objective_id");
-							if(action.equals("ADD")) break;
-							if(!action.equals("INCREMENT")) continue;
-							p.incrementQuestProgress(q.getObjective(objective), false);
+					if(!searchForComplete){
+						if(action.equals("INCREMENT")){
+							p.incrementQuestProgress(o, false);
 						}
-					}
-					
-					//Detect for completed quest
-					while(rs.next()){
-						action = rs.getString("action");
+						
+						if(action.equals("ADD")){
+							p.addActiveQuest(q, false);
+							searchForComplete = true;
+						}
+					}else{
 						if(action.equals("COMPLETE")){
 							p.addCompletedQuest(q);
 							break;
 						}
 					}
 				}
-				
 				
 				pst.close();
 				

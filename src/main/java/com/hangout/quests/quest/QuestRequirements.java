@@ -3,8 +3,8 @@ package com.hangout.quests.quest;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hangout.core.HangoutAPI;
 import com.hangout.core.player.CommonPlayerBundle;
+import com.hangout.core.player.CommonPlayerManager;
 import com.hangout.quests.player.QuestPlayer;
 
 public class QuestRequirements {
@@ -17,7 +17,7 @@ public class QuestRequirements {
 	public QuestRequirements(){}
 	
 	public boolean isPassed(QuestPlayer p){
-		CommonPlayerBundle bundle = HangoutAPI.getPlayerBundle(p.getHangoutPlayer().getUUID());
+		CommonPlayerBundle bundle = CommonPlayerManager.getPlayer(p.getHangoutPlayer().getUUID());
 		if(bundle.getRPGLevel() >= level ||
 				(!races.isEmpty() && races.contains(bundle.getRPGRace())) ||
 				(!occupations.isEmpty() && occupations.contains(bundle.getRPGOccupation())) ||

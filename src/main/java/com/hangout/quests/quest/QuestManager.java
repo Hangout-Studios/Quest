@@ -9,24 +9,23 @@ import java.util.List;
 import org.bukkit.Bukkit;
 
 import com.hangout.core.Config;
-import com.hangout.core.HangoutAPI;
+import com.hangout.core.utils.database.Database;
+import com.hangout.core.utils.mc.DebugUtils;
 import com.hangout.quests.Plugin;
 import com.hangout.quests.player.QuestPlayer;
 
 public class QuestManager {
 	
-	private static List<Quest> registeredQuests = new ArrayList<Quest>();
+	private static HashMap<String, Quest> registeredQuests = new HashMap<String, Quest>();
 	private static HashMap<QuestObjectiveTypes, List<QuestObjective>> registeredObjectives = new HashMap<QuestObjectiveTypes, List<QuestObjective>>();
 	
 	public static List<Quest> getQuests(){
-		return registeredQuests;
+		return new ArrayList<Quest>(registeredQuests.values());
 	}
 	
 	public static Quest getQuest(String tag){
-		for(Quest q : getQuests()){
-			if(q.getTag().equals(tag)){
-				return q;
-			}
+		if(registeredQuests.containsKey(tag)){
+			return registeredQuests.get(tag);
 		}
 		return null;
 	}
@@ -40,13 +39,13 @@ public class QuestManager {
 	}
 	
 	public static void registerQuest(Quest q){
-		registeredQuests.add(q);
+		registeredQuests.put(q.getTag(), q);
 		
 		for(QuestObjective o : q.getObjectives()){
 			registerObjective(o);
 		}
 		
-		HangoutAPI.sendDebugMessage("Successfully registered quest: " + q.getDisplayName());
+		DebugUtils.sendDebugMessage("Successfully registered quest: " + q.getDisplayName());
 	}
 	
 	public static void registerObjective(QuestObjective objective){
@@ -65,7 +64,7 @@ public class QuestManager {
 
 			@Override
 			public void run() {
-				try(PreparedStatement pst = HangoutAPI.getDatabase().prepareStatement(
+				try(PreparedStatement pst = Database.getConnection().prepareStatement(
 		    			"INSERT INTO " + Config.databaseName + ".quest_action (quest_id, objective_id, action, player_id) VALUES (?, ?, ?, ?)")){
 					pst.setString(1, objective.getParent().getTag());
 					pst.setString(2, objective.getTag());

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 
-import com.hangout.core.HangoutAPI;
 import com.hangout.core.player.HangoutPlayer;
+import com.hangout.core.utils.mc.DebugUtils;
 import com.hangout.quests.events.ObjectiveCompleteEvent;
 import com.hangout.quests.quest.Quest;
 import com.hangout.quests.quest.QuestAction;
@@ -43,16 +43,18 @@ public class QuestPlayer {
 		}
 	}
 	
-	public void addActiveQuest(Quest q){
+	public void addActiveQuest(Quest q, boolean commitToDatabase){
 		if(activeQuests.contains(q)) return;
 		
 		activeQuests.add(q);
 		
-		for(QuestObjective o : q.getObjectives()){
-			objectiveProgress.put(o, 0);
+		if(commitToDatabase){
+			for(QuestObjective o : q.getObjectives()){
+				objectiveProgress.put(o, 0);
+			}
+			
+			QuestManager.commitDatabaseAction(this, q.getObjectives().get(0), QuestAction.ADD);
 		}
-		
-		QuestManager.commitDatabaseAction(this, q.getObjectives().get(0), QuestAction.ADD);
 	}
 	
 	public void removeActiveQuest(Quest q){
@@ -81,7 +83,7 @@ public class QuestPlayer {
 	
 	public void setQuestProgress(QuestObjective o, int value){
 		objectiveProgress.put(o, value);
-		HangoutAPI.sendDebugMessage(this.getHangoutPlayer().getName() + " has set progress of " + o.getTag() + " to " + value);
+		DebugUtils.sendDebugMessage(this.getHangoutPlayer().getName() + " has set progress of " + o.getTag() + " to " + value);
 	}
 	
 	public Integer getQuestProgress(QuestObjective o){
@@ -89,5 +91,9 @@ public class QuestPlayer {
 			return objectiveProgress.get(o);
 		}
 		return 0;
+	}
+	
+	public String getQuestProgressString(QuestObjective o){
+		return o.getType().getFormatting().replace("<type>", o.getGoalType().toString().toLowerCase().replace("_", " ")).replace("<progress>", getQuestProgress(o) + "/" + o.getGoalAmount());
 	}
 }

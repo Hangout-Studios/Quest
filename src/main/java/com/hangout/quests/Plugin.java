@@ -1,12 +1,8 @@
 package com.hangout.quests;
 
-import java.util.Arrays;
-
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hangout.core.HangoutAPI;
 import com.hangout.core.utils.lang.MessageManager;
 import com.hangout.quests.listener.BlockListener;
 import com.hangout.quests.listener.MenuListener;
@@ -32,9 +28,7 @@ public class Plugin extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		this.getServer().getPluginManager().registerEvents(new QuestListener(), this);
 		
-		//HangoutAPI.addCustomPlayerProperty("experience", PropertyTypes.INTEGER);
-		
-		HangoutAPI.createMenuItem(HangoutAPI.getMenu("mainmenu"), Material.BOOK_AND_QUILL, "Quest list", Arrays.asList("Check out your quests!"), 2 + 9, "quest_item");
+		//MenuUtils.createMenuItem(HangoutAPI.getMenu("mainmenu"), Material.BOOK_AND_QUILL, "Quest list", Arrays.asList("Check out your quests!"), 2 + 9, "quest_item");
 	}
 	
 	public void onDisable(){
