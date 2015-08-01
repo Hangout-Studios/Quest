@@ -24,7 +24,7 @@ public class QuestMenuUtils {
 			menuTitle = "Quest list - Page " + (pageNumber + 1);
 		}
 		
-		MenuInventory questMenu = MenuUtils.createMenu(menuTitle, 3, "quest_menu", p);
+		MenuInventory questMenu = MenuUtils.createMenu(menuTitle, "quest_menu", p);
 		questMenu.setTemporary(true);
 		
 		int count = 0;
@@ -43,15 +43,15 @@ public class QuestMenuUtils {
 		}
 		
 		if(normalQuests){
-			MenuUtils.createMenuItem(questMenu, Material.NETHER_STAR, "Completed Story Quests", Arrays.asList("Check your legacy!"), 22, "quest_completed_page_0");
+			MenuUtils.createMenuItem(questMenu, Material.NETHER_STAR, "Completed Story Quests", Arrays.asList("Check your legacy!"), 24, "quest_completed_page_0");
 		}else{
-			MenuUtils.createMenuItem(questMenu, Material.BOOK_AND_QUILL, "Active Quests", Arrays.asList("Check your active quests!"), 22, "quest_menu_page_0");
+			MenuUtils.createMenuItem(questMenu, Material.BOOK_AND_QUILL, "Active Quests", Arrays.asList("Check your active quests!"), 24, "quest_menu_page_0");
 		}
 		return questMenu;
 	}
 	
 	public static MenuInventory createQuestMenu(HangoutPlayer p, Quest q){
-		MenuInventory questMenu = MenuUtils.createMenu("Quest " + q.getDisplayName(), 3, "quest_" + q.getTag(), p);
+		MenuInventory questMenu = MenuUtils.createMenu("Quest " + q.getDisplayName(), "quest_" + q.getTag(), p);
 		questMenu.setTemporary(true);
 		
 		QuestPlayer pQ = QuestPlayerManager.getPlayer(p.getUUID());

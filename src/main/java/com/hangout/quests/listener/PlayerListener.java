@@ -15,6 +15,7 @@ import com.hangout.core.events.PlayerQuitCompleteEvent;
 import com.hangout.core.player.CommonPlayerManager;
 import com.hangout.core.utils.database.Database;
 import com.hangout.core.utils.mc.DebugUtils;
+import com.hangout.core.utils.mc.DebugUtils.DebugMode;
 import com.hangout.quests.Plugin;
 import com.hangout.quests.player.QuestPlayer;
 import com.hangout.quests.player.QuestPlayerManager;
@@ -50,7 +51,7 @@ public class PlayerListener implements Listener {
 				
 				e.getPlayer().setLoadingState("quest", true);
 				
-				DebugUtils.sendDebugMessage("Loaded Quest player: " + e.getPlayer().getName());
+				DebugUtils.sendDebugMessage("Loaded Quest player: " + e.getPlayer().getName(), DebugMode.INFO);
 			}
 			
 		});

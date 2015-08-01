@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import com.hangout.core.Config;
 import com.hangout.core.utils.database.Database;
 import com.hangout.core.utils.mc.DebugUtils;
+import com.hangout.core.utils.mc.DebugUtils.DebugMode;
 import com.hangout.quests.Plugin;
 import com.hangout.quests.player.QuestPlayer;
 
@@ -45,7 +46,7 @@ public class QuestManager {
 			registerObjective(o);
 		}
 		
-		DebugUtils.sendDebugMessage("Successfully registered quest: " + q.getDisplayName());
+		DebugUtils.sendDebugMessage("Successfully registered quest: " + q.getDisplayName(), DebugMode.INFO);
 	}
 	
 	public static void registerObjective(QuestObjective objective){

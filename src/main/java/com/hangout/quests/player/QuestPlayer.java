@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 
 import com.hangout.core.player.HangoutPlayer;
 import com.hangout.core.utils.mc.DebugUtils;
+import com.hangout.core.utils.mc.DebugUtils.DebugMode;
 import com.hangout.quests.events.ObjectiveCompleteEvent;
 import com.hangout.quests.quest.Quest;
 import com.hangout.quests.quest.QuestAction;
@@ -83,7 +84,7 @@ public class QuestPlayer {
 	
 	public void setQuestProgress(QuestObjective o, int value){
 		objectiveProgress.put(o, value);
-		DebugUtils.sendDebugMessage(this.getHangoutPlayer().getName() + " has set progress of " + o.getTag() + " to " + value);
+		DebugUtils.sendDebugMessage(this.getHangoutPlayer().getName() + " has set progress of " + o.getTag() + " to " + value, DebugMode.DEBUG);
 	}
 	
 	public Integer getQuestProgress(QuestObjective o){
