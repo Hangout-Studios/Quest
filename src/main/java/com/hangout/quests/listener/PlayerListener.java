@@ -9,9 +9,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.hangout.core.Config;
+import com.hangout.core.events.PlayerDataReleaseEvent;
 import com.hangout.core.events.PlayerJoinCompleteEvent;
 import com.hangout.core.events.PlayerPostLoadEvent;
-import com.hangout.core.events.PlayerQuitCompleteEvent;
 import com.hangout.core.player.CommonPlayerManager;
 import com.hangout.core.utils.database.Database;
 import com.hangout.core.utils.mc.DebugUtils;
@@ -31,7 +31,7 @@ public class PlayerListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerQuit(PlayerQuitCompleteEvent e){
+	public void onPlayerDataRelease(PlayerDataReleaseEvent e){
 		QuestPlayerManager.removePlayer(e.getUUID());
 	}
 	
